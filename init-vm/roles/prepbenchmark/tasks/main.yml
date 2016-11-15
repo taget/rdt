@@ -1,0 +1,13 @@
+---
+
+- name: update apt cache
+  apt: update_cache=yes
+
+- name: install benchmark
+  apt: name=sysbench state=present
+
+- name: copy script
+  copy: src=run_sysbench.sh dest=/tmp/run_sysbench.sh owner=root group=root mode=755
+
+- name: run sysbench
+  command: nohup /tmp/run_sysbench.sh &
