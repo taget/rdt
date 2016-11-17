@@ -1,3 +1,3 @@
 #!/bin/bash
 
-ansible-playbook -i host vm-init.yml -vvvv $*
+ansible-playbook -i host -vvvv $*

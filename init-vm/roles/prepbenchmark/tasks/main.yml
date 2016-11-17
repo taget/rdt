@@ -1,10 +1,13 @@
 ---
 
-- name: update apt cache
-  apt: update_cache=yes
+#- name: update apt cache
+#  apt: update_cache=yes
 
-- name: install benchmark
-  apt: name=sysbench state=present
+#- name: install benchmark
+#  apt: name=sysbench state=present
+
+- name: copy stream binary
+  copy: src=stream dest=/tmp owner=root group=root directory_mode=755
 
 - name: copy script
   copy: src=run_sysbench.sh dest=/tmp/run_sysbench.sh owner=root group=root mode=755
