@@ -7,7 +7,7 @@
 # 
 LOG=/tmp/stream.log
 while true ; do
-    RES=$(/tmp/stream)
+    RES=$(/usr/bin/stream)
     date >> $LOG
     echo "------------------------" >> $LOG
     echo $RES >> $LOG

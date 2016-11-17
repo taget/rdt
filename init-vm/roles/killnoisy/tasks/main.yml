@@ -1,6 +1,6 @@
 ---
 - name: copy kill script
-  copy: src=kill_noisy.sh dest=/tmp owner=root group=root mode=775
+  copy: src=kill_noisy.sh dest=/tmp owner=root group=root mode=775 force=yes
 
 - name: kill stream
   shell: /tmp/kill_noisy.sh
