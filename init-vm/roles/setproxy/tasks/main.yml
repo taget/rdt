@@ -2,11 +2,11 @@
 - name: apt source mirror
   copy: src=sources.list.{{ UBUNTU_VERSION }} dest=/etc/apt/sources.list
 
-#- name: update apt cache
-#  apt: update_cache=yes
+- name: update apt cache
+  apt: update_cache=yes
 
-#- name: install redsocks
-#  apt: name=redsocks state=present
+- name: install daemon
+  apt: name=daemon state=present
 
 - name: proxy.sh
   copy: src=proxy.sh dest=/bin/proxy.sh owner=root group=root mode=755
@@ -19,3 +19,6 @@
 
 - name: sysctl route_local_default
   lineinfile: dest=/etc/sysctl.conf line="net.ipv4.conf.default.route_localnet = 1" state=present
+
+- name: execute proxy.sh
+  command: /bin/proxy.sh

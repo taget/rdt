@@ -3,8 +3,8 @@
 #- name: update apt cache
 #  apt: update_cache=yes
 
-- name: install daemon
-  apt: name=daemon state=present
+#- name: install daemon
+#  apt: name=daemon state=present
 
 - name: copy stream binary
   copy: src=stream dest=/usr/bin owner=root group=root directory_mode=755
