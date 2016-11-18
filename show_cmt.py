@@ -1,16 +1,17 @@
 #!/usr/bin/env python
 
-
 import libvirt
+import os
 import sys
 import time
 
+from texttable import Texttable, get_color_string, bcolors
 
-global dom_info = {}
+dom_info = {}
 
 class LLC(object):
     # llc is in K
-    def __init__(name, llc):
+    def __init__(self, name, llc):
         self._llc = llc
         self._count = 1
         self._name = name
@@ -26,22 +27,48 @@ class LLC(object):
 
     @property
     def avg(self):
-        self.avg = ((self._avg - 1) * self._count + self._llc) / self._count
+        return self._avg
 
     def update(self, llc):
         self._llc = llc
         self._count = self._count + 1
+        self._avg = (self._avg * (self._count - 1) + self._llc) / self._count
+
+    def printf(self):
+        print "%s : LLC: %d, AVG: %d" % (self._name, self._llc, self._avg)
 
 
 def get_llc(stats):
     # file glabal variable dom_info
     for stat in stats:
-        dom_name = dom_info[stat[0].name()
+        dom_name = stat[0].name()
         llc = stat[1]['perf.cmt'] / 8 / 1024
         if dom_info[dom_name]is None:
             dom_info[dom_name] = LLC(dom_name, llc)
         else:
             dom_info[dom_name].update(llc)
+
+def print_llc():
+    total_llc_used = 0
+    total_llc_avg = 0
+    table = Texttable()
+    table.set_cols_align(["l", "r", "c"])
+    table.set_cols_valign(["t", "m", "b"])
+
+    rows = []
+
+    rows.append([get_color_string(bcolors.GREEN, "Instance-name"), "LLC / KB", "LLC_AVG / KB"])
+
+    for dom in dom_info.items():
+        rows.append([get_color_string(bcolors.BLUE, dom[1].name), dom[1].llc, dom[1].avg])
+        total_llc_used += dom[1].llc
+        total_llc_avg += dom[1].avg
+
+    rows.append([get_color_string(bcolors.BLUE,"Total"), total_llc_used, total_llc_avg])
+    table.add_rows(rows)
+    os.system('cls' if os.name == 'nt' else 'clear')
+    print(table.draw() + '\n')
+
 
 #####################################################
 
@@ -69,6 +96,7 @@ while True:
     time.sleep(0.1)
     stats = conn.domainListGetStats(dom_list)
     get_llc(stats)
+    print_llc()
 
 conn.close()
 
