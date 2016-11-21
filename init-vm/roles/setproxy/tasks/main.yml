@@ -1,4 +1,7 @@
----
+- name: scan key
+  sudo: no
+  local_action: shell ssh-keyscan '{{ inventory_hostname  }}' >> ~/.ssh/known_hosts
+
 - name: apt source mirror
   copy: src=sources.list.{{ UBUNTU_VERSION }} dest=/etc/apt/sources.list
 

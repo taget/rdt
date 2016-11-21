@@ -52,23 +52,37 @@ def print_llc():
     total_llc_used = 0
     total_llc_avg = 0
     table = Texttable()
-    table.set_cols_align(["l", "r", "c"])
-    table.set_cols_valign(["t", "m", "b"])
+    table.set_cols_align(["l", "r", "c", "c"])
+    table.set_cols_valign(["t", "m", "b", "b"])
 
     rows = []
+    i = 1
 
-    rows.append([get_color_string(bcolors.GREEN, "Instance-name"), "LLC / KB", "LLC_AVG / KB"])
-
+    rows.append(["Seq", get_color_string(bcolors.GREEN, "Instance-name"), "LLC / KB", "LLC_AVG / KB"])
+  
     for dom in dom_info.items():
-        rows.append([get_color_string(bcolors.BLUE, dom[1].name), dom[1].llc, dom[1].avg])
+        rows.append([i, get_color_string(bcolors.BLUE, dom[1].name), dom[1].llc, dom[1].avg])
         total_llc_used += dom[1].llc
         total_llc_avg += dom[1].avg
+        i = i + 1 
 
-    rows.append([get_color_string(bcolors.BLUE,"Total"), total_llc_used, total_llc_avg])
+    rows.append(['all', get_color_string(bcolors.BLUE,"Total"), total_llc_used, total_llc_avg])
     table.add_rows(rows)
     os.system('cls' if os.name == 'nt' else 'clear')
     print(table.draw() + '\n')
 
+
+def parse_parameters(argv):
+
+    ret = []
+    if '-' in argv[1]:
+        try:
+            start_end = map(int, argv[1].split("-"))
+            return range(start_end[0], start_end[1] + 1)
+        except:
+            raise
+    else:
+        return map(int, argv[1:])
 
 #####################################################
 
@@ -81,7 +95,8 @@ if conn == None:
 # try to get dom
 
 dom_list = []
-dom_ids = map(int, sys.argv[1:])
+dom_ids = parse_parameters(sys.argv)
+#map(int, sys.argv[1:])
 
 for dom_id in dom_ids:
     try:
