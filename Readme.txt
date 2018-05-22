@@ -27,4 +27,3 @@ sudo ./show_cmt.py 16 17 18 ...
 
 cd init-vm
 ./run.sh kill-noisy.yml
-
